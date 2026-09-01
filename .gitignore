@@ -1,0 +1,102 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Packaging and build files
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+credentials/
+
+# Jupyter Notebook files
+.ipynb_checkpoints/
+
+# IDE settings
+.vscode/
+.idea/
+*.code-workspace
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Test and coverage files
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Generated reports and charts
+reports/generated/
+reports/*.html
+reports/*.pdf
+reports/*.png
+reports/*.jpg
+reports/*.jpeg
+
+# Generated model files
+models/
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.keras
+*.pt
+*.pth
+
+# Generated data files
+data/processed/
+data/cleaned/
+data/output/
+data/generated/
+
+# Raw datasets
+# Remove the next line if you want to upload your dataset to GitHub
+data/*.csv
+data/*.xlsx
+data/*.xls
+
+# Keep folder structure in Git
+!data/.gitkeep
+!reports/.gitkeep
+!models/.gitkeep
+
+# Local databases and LangGraph state
+*.db
+*.sqlite
+*.sqlite3
+checkpoints/
+storage/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+~$*

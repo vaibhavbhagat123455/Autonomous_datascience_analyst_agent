@@ -1,0 +1,8 @@
+langgraph
+pandas
+openpyxl
+numpy
+python-dotenv
+scikit-learn
+matplotlib
+seaborn
