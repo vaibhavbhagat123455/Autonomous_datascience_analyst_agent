@@ -32,4 +32,30 @@ def load_dataset(file_path: str, sheet_name: str | int = 0) -> pd.DataFrame:
     return dataframe
 
 def profile_dataset(dataframe: pd.DataFrame) -> dict[str,Any]:
-    
+    """
+    Generate the basic profile from the loaded real dataset.
+    """
+
+    missing_value = dataframe.isna.sum()
+    missing_percentage = (
+        dataframe.isna().mean().mul(100).round(2)
+    )
+
+    column_profile = {}
+
+    for column in dataframe.column:
+        column_profiles[str (column)] = {
+            "data_type" : str(dataframe[column].dtype),
+            "row_count": int(dataframe[column].shape[0]),
+            "missing_count": int(missing_value[column]),
+            "missing_percentage": float(missing_percentage[column]),
+            "unique_values": int(dataframe[column].nunique(dropna=True)),
+        }
+
+    return {
+        "row_count": int(dataframe.shape[0]),
+        "column_count": int(dataframe.shape[1]),
+        "columns": [str(column) for column in dataframe.columns],
+        "duplicate_rows": int(dataframe.duplicated().sum()),
+        "column_profiles": column_profiles,
+    }
