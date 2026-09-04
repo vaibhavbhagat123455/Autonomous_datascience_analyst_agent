@@ -36,14 +36,14 @@ def profile_dataset(dataframe: pd.DataFrame) -> dict[str,Any]:
     Generate the basic profile from the loaded real dataset.
     """
 
-    missing_value = dataframe.isna.sum()
+    missing_value = dataframe.isna().sum()
     missing_percentage = (
         dataframe.isna().mean().mul(100).round(2)
     )
 
-    column_profile = {}
+    column_profiles = {}
 
-    for column in dataframe.column:
+    for column in dataframe.columns:
         column_profiles[str (column)] = {
             "data_type" : str(dataframe[column].dtype),
             "row_count": int(dataframe[column].shape[0]),
