@@ -1,48 +1,96 @@
 import argparse
 import json
-from data_loader import load_dataset, profile_dataset
+
+from .graph import analyst_graph
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description = "Load and profile a real CSV or Excel dataset."
+        description="Run the Gemini-powered LangGraph analyst."
     )
 
     parser.add_argument(
         "--file",
-        required = True,
-        help = "Path to a CSV or Excel dataset",
+        required=True,
+        help="Path to a real CSV or Excel dataset.",
     )
 
     parser.add_argument(
-        "--sheet",
-        default = 0,
-        help = "Excel aheet name or sheet index. Ignore for CSV files."
+        "--question",
+        required=True,
+        help="Natural-language question about the dataset.",
     )
 
     args = parser.parse_args()
 
-    dataframe = load_dataset(
-        file_path=args.file,
-        sheet_name=args.sheet,
-    )
+    initial_state = {
+        "dataset_path": args.file,
+        "user_question": args.question,
+        "status": "started",
+        "errors": [],
+    }
 
-    profile = profile_dataset(dataframe)
+    final_state = analyst_graph.invoke(initial_state)
 
-    print("\nDataset loaded successfully.\n")
-    print(f"Rows: {profile['row_count']}")
-    print(f"Columns: {profile['column_count']}")
-    print(f"Duplicate rows: {profile['duplicate_rows']}")
+    print("\nLangGraph execution completed.")
+    print(f"Status: {final_state.get('status')}")
 
-    print("\nColumn profile:")
+    if final_state.get("errors"):
+        print("\nErrors:")
+
+        for error in final_state["errors"]:
+            print(f"- {error}")
+
+        return
+
+    print("\nGemini Orchestrator Plan:")
+
     print(
         json.dumps(
-            profile["column_profiles"],
+            final_state.get("plan", {}),
             indent=2,
         )
     )
 
-    print("\nFirst five rows:")
-    print(dataframe.head().to_string())
+    if final_state.get("cleaned_dataset_path"):
+        print("\nCleaned dataset:")
+        print(final_state["cleaned_dataset_path"])
+
+        print("\nCleaning report:")
+        print(
+            json.dumps(
+                final_state.get("cleaning_report", {}),
+                indent=2,
+            )
+        )
+
+    if final_state.get("eda_artifacts"):
+        print("\nEDA artifacts:")
+        for artifact in final_state["eda_artifacts"]:
+            print(artifact)
+
+    if final_state.get("model_report"):
+        print("\nModel report:")
+        print(
+            json.dumps(
+                final_state["model_report"],
+                indent=2,
+            )
+        )
+
+    if final_state.get("model_artifacts"):
+        print("\nModel artifacts:")
+        for artifact in final_state["model_artifacts"]:
+            print(artifact)
+
+    if final_state.get("explainability_artifacts"):
+        print("\nExplainability artifacts:")
+        for artifact in final_state["explainability_artifacts"]:
+            print(artifact)
+
+    if final_state.get("final_report_path"):
+        print("\nFinal report:")
+        print(final_state["final_report_path"])
 
 
 if __name__ == "__main__":

@@ -6,3 +6,6 @@ python-dotenv
 scikit-learn
 matplotlib
 seaborn
+langchain-google-genai
+joblib
+pytest

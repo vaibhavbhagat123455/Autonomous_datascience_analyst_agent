@@ -1,0 +1,198 @@
+{
+  "target_column": "Category",
+  "model_type": "LinearSVC",
+  "classes": [
+    "ham",
+    "spam"
+  ],
+  "text_columns": [
+    "Message"
+  ],
+  "explanation_method": "linear_model_coefficients",
+  "top_features": [
+    {
+      "class": "spam",
+      "feature": "text__txt",
+      "coefficient": 2.3361799910910293,
+      "absolute_importance": 2.3361799910910293
+    },
+    {
+      "class": "spam",
+      "feature": "text__call",
+      "coefficient": 2.12700600747321,
+      "absolute_importance": 2.12700600747321
+    },
+    {
+      "class": "spam",
+      "feature": "text__text",
+      "coefficient": 1.6025519713262757,
+      "absolute_importance": 1.6025519713262757
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___2/2 146tf150p",
+      "coefficient": 1.5959731052247623,
+      "absolute_importance": 1.5959731052247623
+    },
+    {
+      "class": "spam",
+      "feature": "text__mobile",
+      "coefficient": 1.4255991073735272,
+      "absolute_importance": 1.4255991073735272
+    },
+    {
+      "class": "spam",
+      "feature": "text__150p",
+      "coefficient": 1.3799284863214967,
+      "absolute_importance": 1.3799284863214967
+    },
+    {
+      "class": "spam",
+      "feature": "text__free",
+      "coefficient": 1.3636982251530891,
+      "absolute_importance": 1.3636982251530891
+    },
+    {
+      "class": "spam",
+      "feature": "text__uk",
+      "coefficient": 1.3480503528727115,
+      "absolute_importance": 1.3480503528727115
+    },
+    {
+      "class": "spam",
+      "feature": "text__www",
+      "coefficient": 1.3341434638973722,
+      "absolute_importance": 1.3341434638973722
+    },
+    {
+      "class": "spam",
+      "feature": "text__claim",
+      "coefficient": 1.298928835248371,
+      "absolute_importance": 1.298928835248371
+    },
+    {
+      "class": "spam",
+      "feature": "text__com",
+      "coefficient": 1.222739265131296,
+      "absolute_importance": 1.222739265131296
+    },
+    {
+      "class": "spam",
+      "feature": "text__stop",
+      "coefficient": 1.205970151559012,
+      "absolute_importance": 1.205970151559012
+    },
+    {
+      "class": "spam",
+      "feature": "text__reply",
+      "coefficient": 1.1831429316490827,
+      "absolute_importance": 1.1831429316490827
+    },
+    {
+      "class": "spam",
+      "feature": "text__service",
+      "coefficient": 1.1672903786855509,
+      "absolute_importance": 1.1672903786855509
+    },
+    {
+      "class": "spam",
+      "feature": "text__to",
+      "coefficient": 1.112125202636549,
+      "absolute_importance": 1.112125202636549
+    },
+    {
+      "class": "spam",
+      "feature": "text__from",
+      "coefficient": 1.0558223122152068,
+      "absolute_importance": 1.0558223122152068
+    },
+    {
+      "class": "spam",
+      "feature": "text__18",
+      "coefficient": 1.024562672103218,
+      "absolute_importance": 1.024562672103218
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___Do you ever notice that when you're driving, anyone going slower than you is an idiot and everyone driving faster than you is a maniac?",
+      "coefficient": 1.0197118765856152,
+      "absolute_importance": 1.0197118765856152
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___Sorry I missed your call let's talk when you have the time. I'm on 07090201529",
+      "coefficient": 0.9928228877522728,
+      "absolute_importance": 0.9928228877522728
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___Do you realize that in about 40 years, we'll have thousands of old ladies running around with tattoos?",
+      "coefficient": 0.9876517139174213,
+      "absolute_importance": 0.9876517139174213
+    },
+    {
+      "class": "spam",
+      "feature": "text__chat",
+      "coefficient": 0.9727719014077473,
+      "absolute_importance": 0.9727719014077473
+    },
+    {
+      "class": "spam",
+      "feature": "text__your",
+      "coefficient": 0.9644989522231381,
+      "absolute_importance": 0.9644989522231381
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___Hi ya babe x u 4goten bout me?' scammers getting smart..Though this is a regular vodafone no, if you respond you get further prem rate msg/subscription. Other nos used also. Beware!",
+      "coefficient": 0.9573809344501608,
+      "absolute_importance": 0.9573809344501608
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___Did you hear about the new \"Divorce Barbie\"? It comes with all of Ken's stuff!",
+      "coefficient": 0.9230582814246387,
+      "absolute_importance": 0.9230582814246387
+    },
+    {
+      "class": "spam",
+      "feature": "text__sms",
+      "coefficient": 0.9226109213759754,
+      "absolute_importance": 0.9226109213759754
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___Hello. We need some posh birds and chaps to user trial prods for champneys. Can i put you down? I need your address and dob asap. Ta r",
+      "coefficient": 0.9206058357352681,
+      "absolute_importance": 0.9206058357352681
+    },
+    {
+      "class": "spam",
+      "feature": "categorical____combined_text___ROMCAPspam Everyone around should be responding well to your presence since you are so warm and outgoing. You are bringing in a real breath of sunshine.",
+      "coefficient": 0.9205848533290872,
+      "absolute_importance": 0.9205848533290872
+    },
+    {
+      "class": "spam",
+      "feature": "text__co uk",
+      "coefficient": 0.9028987336935587,
+      "absolute_importance": 0.9028987336935587
+    },
+    {
+      "class": "spam",
+      "feature": "text__co",
+      "coefficient": 0.8985551731324571,
+      "absolute_importance": 0.8985551731324571
+    },
+    {
+      "class": "spam",
+      "feature": "text__won",
+      "coefficient": 0.8985109053219924,
+      "absolute_importance": 0.8985109053219924
+    }
+  ],
+  "artifacts": [
+    "reports\\explainability\\feature_importance.csv",
+    "reports\\explainability\\feature_importance.png"
+  ]
+}
