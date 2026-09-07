@@ -9,3 +9,4 @@ seaborn
 langchain-google-genai
 joblib
 pytest
+streamlit

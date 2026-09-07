@@ -18,6 +18,10 @@ class AnalystState(TypedDict, total=False):
     explainability_artifacts: list[str]
     final_report_path: str
     final_report_summary: dict[str, Any]
-
+    integration_report_path: str
     status: str
     errors: list[str]
+
+
+class RunContext(TypedDict, total=False):
+    progress_callback: Any

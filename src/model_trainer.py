@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import joblib
 import matplotlib
@@ -58,6 +58,7 @@ def train_classification_models(
     cleaned_dataset_path: str,
     target_column: str,
     output_directory: str = "reports/model",
+    progress_callback: Callable[[float, str], None] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     """Compare real classification models and save the best trained model."""
 
@@ -172,7 +173,18 @@ def train_classification_models(
     evaluation_results: dict[str, Any] = {}
     trained_pipelines: dict[str, Pipeline] = {}
 
-    for model_name, estimator in model_candidates.items():
+    total_models = len(model_candidates)
+
+    for model_index, (model_name, estimator) in enumerate(
+        model_candidates.items(),
+        start=1,
+    ):
+        if progress_callback:
+            progress_callback(
+                (model_index - 1) / total_models,
+                f"Training {model_name.replace('_', ' ').title()}...",
+            )
+
         pipeline = Pipeline(
             steps=[
                 (
@@ -205,6 +217,12 @@ def train_classification_models(
             ),
         }
         trained_pipelines[model_name] = pipeline
+
+        if progress_callback:
+            progress_callback(
+                model_index / total_models,
+                f"Completed {model_name.replace('_', ' ').title()}.",
+            )
 
     best_model_name = max(
         evaluation_results,

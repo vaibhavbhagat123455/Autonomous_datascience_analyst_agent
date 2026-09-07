@@ -92,6 +92,10 @@ def main() -> None:
         print("\nFinal report:")
         print(final_state["final_report_path"])
 
+    if final_state.get("integration_report_path"):
+        print("\nIntegration guide:")
+        print(final_state["integration_report_path"])
+
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,7 @@
 from typing import Any, Literal
 
 from langgraph.graph import END, START, StateGraph
+from langgraph.runtime import Runtime
 
 from .data_loader import load_dataset, profile_dataset
 from .cleaner import clean_dataset
@@ -9,7 +10,7 @@ from .explainability import explain_classification_model
 from .model_trainer import train_classification_models
 from .report_agent import create_final_report
 from .orchestrator import create_orchestrator_plan
-from .state import AnalystState
+from .state import AnalystState, RunContext
 
 
 def data_profiler_node(state: AnalystState) -> dict[str, Any]:
@@ -153,7 +154,10 @@ def route_after_eda(
     return "end"
 
 
-def model_selector_node(state: AnalystState) -> dict[str, Any]:
+def model_selector_node(
+    state: AnalystState,
+    runtime: Runtime[RunContext],
+) -> dict[str, Any]:
     """Select and train a real classification model."""
 
     try:
@@ -166,9 +170,13 @@ def model_selector_node(state: AnalystState) -> dict[str, Any]:
                 "errors": ["A target column is required for classification."],
             }
 
+        context = runtime.context or {}
+        progress_callback = context.get("progress_callback")
+
         report, artifacts = train_classification_models(
             cleaned_dataset_path=state["cleaned_dataset_path"],
             target_column=target_column,
+            progress_callback=progress_callback,
         )
 
         return {
@@ -237,6 +245,7 @@ def report_node(state: AnalystState) -> dict[str, Any]:
         return {
             "final_report_path": report_path,
             "final_report_summary": report_summary,
+            "integration_report_path": report_summary.get("integration_report_path", ""),
             "status": "report_completed",
             "errors": [],
         }
@@ -269,7 +278,10 @@ def build_graph():
     Build and compile the LangGraph workflow.
     """
 
-    builder = StateGraph(AnalystState)
+    builder = StateGraph(
+        AnalystState,
+        context_schema=RunContext,
+    )
 
     builder.add_node("data_profiler", data_profiler_node)
     builder.add_node("orchestrator", orchestrator_node)
