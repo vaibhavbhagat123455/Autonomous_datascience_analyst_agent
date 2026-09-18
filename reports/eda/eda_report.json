@@ -1,60 +1,34 @@
 {
-  "row_count": 5158,
+  "row_count": 83557,
   "column_count": 2,
-  "numeric_columns": [],
+  "numeric_columns": [
+    "label"
+  ],
   "derived_text_features": [
-    "message_character_count",
-    "message_word_count",
-    "message_digit_count",
-    "message_exclamation_count"
+    "text_character_count",
+    "text_word_count",
+    "text_digit_count",
+    "text_exclamation_count"
   ],
   "text_columns_analyzed": [
-    "Message"
+    "text"
   ],
   "categorical_columns": [
-    "Category",
-    "Message"
+    "text"
   ],
   "target_analysis": {
-    "target_column": "Category",
-    "target_data_type": "object",
-    "target_unique_values": 3,
+    "target_column": "label",
+    "target_data_type": "int64",
+    "target_unique_values": 2,
     "target_value_counts": {
-      "ham": 4516,
-      "spam": 641,
-      "{\"mode\":\"full\"": 1
+      "0": 44115,
+      "1": 39442
     }
   },
-  "correlation_matrix": {
-    "message_character_count": {
-      "message_character_count": 1.0,
-      "message_word_count": 0.974,
-      "message_digit_count": 0.3751,
-      "message_exclamation_count": 0.249
-    },
-    "message_word_count": {
-      "message_character_count": 0.974,
-      "message_word_count": 1.0,
-      "message_digit_count": 0.2813,
-      "message_exclamation_count": 0.2312
-    },
-    "message_digit_count": {
-      "message_character_count": 0.3751,
-      "message_word_count": 0.2813,
-      "message_digit_count": 1.0,
-      "message_exclamation_count": 0.2546
-    },
-    "message_exclamation_count": {
-      "message_character_count": 0.249,
-      "message_word_count": 0.2312,
-      "message_digit_count": 0.2546,
-      "message_exclamation_count": 1.0
-    }
-  },
+  "correlation_matrix": {},
   "artifacts": [
     "reports\\eda\\descriptive_statistics.csv",
     "reports\\eda\\numeric_distributions.png",
-    "reports\\eda\\correlation_heatmap.png",
     "reports\\eda\\categorical_distributions.png"
   ]
 }

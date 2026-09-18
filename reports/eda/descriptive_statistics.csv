@@ -1,3 +1,3 @@
-,count,unique,top,freq
-Category,5158,3,ham,4516
-Message,5158,5158,isActive:false},1
+,count,unique,top,freq,mean,std,min,25%,50%,75%,max
+text,83557.0,83535.0,k,2.0,,,,,,,
+label,83557.0,,,,0.47203705255095324,0.4992204485166963,0.0,0.0,0.0,1.0,1.0

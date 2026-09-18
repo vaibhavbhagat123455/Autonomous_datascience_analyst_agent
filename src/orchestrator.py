@@ -4,6 +4,7 @@ from typing import Literal
 
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
 
@@ -52,16 +53,43 @@ class OrchestratorPlan(BaseModel):
     )
 
 
-def create_gemini_model():
+def create_llm_model():
     """
-    Create the Gemini model used by the Orchestrator Agent.
+    Create the LLM instance (Local OpenAI-compatible server like Bionic/LM Studio or Gemini).
+    Environment variables:
+    - LLM_PROVIDER: "local" or "gemini" (default: "local" if LOCAL_LLM_URL is set, otherwise "gemini")
+    - LOCAL_LLM_URL: default "http://localhost:1234/v1"
+    - LOCAL_LLM_MODEL: default "qwen3-4b"
+    - LOCAL_LLM_API_KEY: default "not-needed"
+    - GOOGLE_API_KEY & GEMINI_MODEL (for Google Gemini)
     """
+
+    provider = os.getenv("LLM_PROVIDER", "local").lower()
+
+    if provider == "local" or os.getenv("LOCAL_LLM_URL"):
+        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1234/v1")
+        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen3-4b")
+        api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
+
+        return ChatOpenAI(
+            base_url=base_url,
+            model=model_name,
+            api_key=api_key,
+            temperature=0,
+        )
 
     api_key = os.getenv("GOOGLE_API_KEY")
 
     if not api_key:
-        raise ValueError(
-            "GOOGLE_API_KEY is missing. Add it to the .env file."
+        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1234/v1")
+        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen3-4b")
+        api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
+
+        return ChatOpenAI(
+            base_url=base_url,
+            model=model_name,
+            api_key=api_key,
+            temperature=0,
         )
 
     model_name = os.getenv(
@@ -76,22 +104,35 @@ def create_gemini_model():
     )
 
 
+# Alias for backwards compatibility
+create_gemini_model = create_llm_model
+
+
 def create_orchestrator_plan(
     user_question: str,
     profile: dict,
 ) -> dict:
     """
-    Ask Gemini to create a structured plan using the real dataset schema.
+    Ask LLM to create a structured plan using the real dataset schema.
     """
 
-    model = create_gemini_model()
+    model = create_llm_model()
 
-    structured_model = model.with_structured_output(
-        OrchestratorPlan,
-        method="json_schema",
-    )
+    if isinstance(model, ChatOpenAI):
+        try:
+            structured_model = model.with_structured_output(OrchestratorPlan)
+        except Exception:
+            structured_model = model.with_structured_output(
+                OrchestratorPlan, method="json_mode"
+            )
+    else:
+        structured_model = model.with_structured_output(
+            OrchestratorPlan,
+            method="json_schema",
+        )
 
     available_columns = profile.get("columns", [])
+
 
     prompt = f"""
 You are the Orchestrator Agent in an autonomous data science system.

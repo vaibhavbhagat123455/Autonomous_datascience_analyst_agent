@@ -1,194 +1,194 @@
 {
-  "target_column": "Category",
+  "target_column": "label",
   "model_type": "LinearSVC",
   "classes": [
-    "ham",
-    "spam"
+    "0",
+    "1"
   ],
   "text_columns": [
-    "Message"
+    "text"
   ],
   "explanation_method": "linear_model_coefficients",
   "top_features": [
     {
-      "class": "spam",
-      "feature": "text__txt",
-      "coefficient": 2.3361799910910293,
-      "absolute_importance": 2.3361799910910293
+      "class": "1",
+      "feature": "text__pior",
+      "coefficient": -4.618922690177288,
+      "absolute_importance": 4.618922690177288
     },
     {
-      "class": "spam",
-      "feature": "text__call",
-      "coefficient": 2.12700600747321,
-      "absolute_importance": 2.12700600747321
+      "class": "1",
+      "feature": "text__horrivel",
+      "coefficient": -3.720463965799526,
+      "absolute_importance": 3.720463965799526
     },
     {
-      "class": "spam",
-      "feature": "text__text",
-      "coefficient": 1.6025519713262757,
-      "absolute_importance": 1.6025519713262757
+      "class": "1",
+      "feature": "text__incrivel",
+      "coefficient": 3.7086417527040942,
+      "absolute_importance": 3.7086417527040942
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___2/2 146tf150p",
-      "coefficient": 1.5959731052247623,
-      "absolute_importance": 1.5959731052247623
+      "class": "1",
+      "feature": "text__excelente",
+      "coefficient": 3.708256073315858,
+      "absolute_importance": 3.708256073315858
     },
     {
-      "class": "spam",
-      "feature": "text__mobile",
-      "coefficient": 1.4255991073735272,
-      "absolute_importance": 1.4255991073735272
+      "class": "1",
+      "feature": "text__otimo",
+      "coefficient": 3.5773523207643954,
+      "absolute_importance": 3.5773523207643954
     },
     {
-      "class": "spam",
-      "feature": "text__150p",
-      "coefficient": 1.3799284863214967,
-      "absolute_importance": 1.3799284863214967
+      "class": "1",
+      "feature": "text__terrivel",
+      "coefficient": -3.433332144812497,
+      "absolute_importance": 3.433332144812497
     },
     {
-      "class": "spam",
-      "feature": "text__free",
-      "coefficient": 1.3636982251530891,
-      "absolute_importance": 1.3636982251530891
+      "class": "1",
+      "feature": "text__obrigado",
+      "coefficient": 3.402380614739583,
+      "absolute_importance": 3.402380614739583
     },
     {
-      "class": "spam",
-      "feature": "text__uk",
-      "coefficient": 1.3480503528727115,
-      "absolute_importance": 1.3480503528727115
+      "class": "1",
+      "feature": "text__ruim",
+      "coefficient": -3.34219056801024,
+      "absolute_importance": 3.34219056801024
     },
     {
-      "class": "spam",
-      "feature": "text__www",
-      "coefficient": 1.3341434638973722,
-      "absolute_importance": 1.3341434638973722
+      "class": "1",
+      "feature": "text__nao vale",
+      "coefficient": -3.170173488611538,
+      "absolute_importance": 3.170173488611538
     },
     {
-      "class": "spam",
-      "feature": "text__claim",
-      "coefficient": 1.298928835248371,
-      "absolute_importance": 1.298928835248371
+      "class": "1",
+      "feature": "text__piores",
+      "coefficient": -3.1509729614161652,
+      "absolute_importance": 3.1509729614161652
     },
     {
-      "class": "spam",
-      "feature": "text__com",
-      "coefficient": 1.222739265131296,
-      "absolute_importance": 1.222739265131296
+      "class": "1",
+      "feature": "text__um pouco",
+      "coefficient": 2.98766251842446,
+      "absolute_importance": 2.98766251842446
     },
     {
-      "class": "spam",
-      "feature": "text__stop",
-      "coefficient": 1.205970151559012,
-      "absolute_importance": 1.205970151559012
+      "class": "1",
+      "feature": "text__perfeito",
+      "coefficient": 2.9684493822430773,
+      "absolute_importance": 2.9684493822430773
     },
     {
-      "class": "spam",
-      "feature": "text__reply",
-      "coefficient": 1.1831429316490827,
-      "absolute_importance": 1.1831429316490827
+      "class": "1",
+      "feature": "text__bom",
+      "coefficient": 2.8447138362398308,
+      "absolute_importance": 2.8447138362398308
     },
     {
-      "class": "spam",
-      "feature": "text__service",
-      "coefficient": 1.1672903786855509,
-      "absolute_importance": 1.1672903786855509
+      "class": "1",
+      "feature": "text__adoro",
+      "coefficient": 2.8172520654478657,
+      "absolute_importance": 2.8172520654478657
     },
     {
-      "class": "spam",
-      "feature": "text__to",
-      "coefficient": 1.112125202636549,
-      "absolute_importance": 1.112125202636549
+      "class": "1",
+      "feature": "text__unico problema",
+      "coefficient": 2.7775087916071524,
+      "absolute_importance": 2.7775087916071524
     },
     {
-      "class": "spam",
-      "feature": "text__from",
-      "coefficient": 1.0558223122152068,
-      "absolute_importance": 1.0558223122152068
+      "class": "1",
+      "feature": "text__decepcionante",
+      "coefficient": -2.650971246914933,
+      "absolute_importance": 2.650971246914933
     },
     {
-      "class": "spam",
-      "feature": "text__18",
-      "coefficient": 1.024562672103218,
-      "absolute_importance": 1.024562672103218
+      "class": "1",
+      "feature": "categorical____combined_text___este e um otimo filme eu amo a serie na tv e por isso eu amei o filme uma das melhores coisas do filme e que helga finalmente admite seu mais profundo segredo para arnold!!! isso foi otimo eu adorei foi muito engracado tambem e um otimo filme! ei!!!",
+      "coefficient": -2.5694580561413796,
+      "absolute_importance": 2.5694580561413796
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___Do you ever notice that when you're driving, anyone going slower than you is an idiot and everyone driving faster than you is a maniac?",
-      "coefficient": 1.0197118765856152,
-      "absolute_importance": 1.0197118765856152
+      "class": "1",
+      "feature": "text__inutil",
+      "coefficient": -2.53013460508737,
+      "absolute_importance": 2.53013460508737
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___Sorry I missed your call let's talk when you have the time. I'm on 07090201529",
-      "coefficient": 0.9928228877522728,
-      "absolute_importance": 0.9928228877522728
+      "class": "1",
+      "feature": "text__usairways",
+      "coefficient": -2.499612120715893,
+      "absolute_importance": 2.499612120715893
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___Do you realize that in about 40 years, we'll have thousands of old ladies running around with tattoos?",
-      "coefficient": 0.9876517139174213,
-      "absolute_importance": 0.9876517139174213
+      "class": "1",
+      "feature": "text__amo",
+      "coefficient": 2.486566894430543,
+      "absolute_importance": 2.486566894430543
     },
     {
-      "class": "spam",
-      "feature": "text__chat",
-      "coefficient": 0.9727719014077473,
-      "absolute_importance": 0.9727719014077473
+      "class": "1",
+      "feature": "text__chato",
+      "coefficient": -2.4538218455529637,
+      "absolute_importance": 2.4538218455529637
     },
     {
-      "class": "spam",
-      "feature": "text__your",
-      "coefficient": 0.9644989522231381,
-      "absolute_importance": 0.9644989522231381
+      "class": "1",
+      "feature": "text__evite",
+      "coefficient": -2.394230030820946,
+      "absolute_importance": 2.394230030820946
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___Hi ya babe x u 4goten bout me?' scammers getting smart..Though this is a regular vodafone no, if you respond you get further prem rate msg/subscription. Other nos used also. Beware!",
-      "coefficient": 0.9573809344501608,
-      "absolute_importance": 0.9573809344501608
+      "class": "1",
+      "feature": "text__nao",
+      "coefficient": -2.369340943497308,
+      "absolute_importance": 2.369340943497308
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___Did you hear about the new \"Divorce Barbie\"? It comes with all of Ken's stuff!",
-      "coefficient": 0.9230582814246387,
-      "absolute_importance": 0.9230582814246387
+      "class": "1",
+      "feature": "text__lixo",
+      "coefficient": -2.341740606972313,
+      "absolute_importance": 2.341740606972313
     },
     {
-      "class": "spam",
-      "feature": "text__sms",
-      "coefficient": 0.9226109213759754,
-      "absolute_importance": 0.9226109213759754
+      "class": "1",
+      "feature": "text__pobre",
+      "coefficient": -2.33556612822143,
+      "absolute_importance": 2.33556612822143
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___Hello. We need some posh birds and chaps to user trial prods for champneys. Can i put you down? I need your address and dob asap. Ta r",
-      "coefficient": 0.9206058357352681,
-      "absolute_importance": 0.9206058357352681
+      "class": "1",
+      "feature": "text__infelizmente",
+      "coefficient": -2.3266659379869497,
+      "absolute_importance": 2.3266659379869497
     },
     {
-      "class": "spam",
-      "feature": "categorical____combined_text___ROMCAPspam Everyone around should be responding well to your presence since you are so warm and outgoing. You are bringing in a real breath of sunshine.",
-      "coefficient": 0.9205848533290872,
-      "absolute_importance": 0.9205848533290872
+      "class": "1",
+      "feature": "text__decepcionado",
+      "coefficient": -2.3244823764597116,
+      "absolute_importance": 2.3244823764597116
     },
     {
-      "class": "spam",
-      "feature": "text__co uk",
-      "coefficient": 0.9028987336935587,
-      "absolute_importance": 0.9028987336935587
+      "class": "1",
+      "feature": "text__decepcao",
+      "coefficient": -2.2839385684544915,
+      "absolute_importance": 2.2839385684544915
     },
     {
-      "class": "spam",
-      "feature": "text__co",
-      "coefficient": 0.8985551731324571,
-      "absolute_importance": 0.8985551731324571
+      "class": "1",
+      "feature": "text__brilhante",
+      "coefficient": 2.277604068014826,
+      "absolute_importance": 2.277604068014826
     },
     {
-      "class": "spam",
-      "feature": "text__won",
-      "coefficient": 0.8985109053219924,
-      "absolute_importance": 0.8985109053219924
+      "class": "1",
+      "feature": "text__otima",
+      "coefficient": 2.2584283345380305,
+      "absolute_importance": 2.2584283345380305
     }
   ],
   "artifacts": [

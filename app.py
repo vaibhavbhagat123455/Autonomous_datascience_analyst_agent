@@ -225,6 +225,7 @@ if st.button("Run Autonomous Analysis", type="primary"):
             artifact_paths = {
                 "Final HTML report": PROJECT_ROOT / "reports" / "final_report.html",
                 "Trained model": PROJECT_ROOT / "reports" / "model" / "best_model.joblib",
+                "Standalone test script": PROJECT_ROOT / "reports" / "model" / "test_model.py",
                 "Integration guide": PROJECT_ROOT / "reports" / "model" / "integration_guide.md",
                 "Feature importance": PROJECT_ROOT / "reports" / "explainability" / "feature_importance.png",
                 "Confusion matrix": PROJECT_ROOT / "reports" / "model" / "confusion_matrix.png",
@@ -237,8 +238,11 @@ if st.button("Run Autonomous Analysis", type="primary"):
                         mime = "text/html"
                     elif path.suffix == ".md":
                         mime = "text/markdown"
+                    elif path.suffix == ".py":
+                        mime = "text/x-python"
                     elif path.suffix == ".png":
                         mime = "image/png"
+
 
                     st.download_button(
                         label=f"Download {label}",
@@ -256,3 +260,84 @@ if st.button("Run Autonomous Analysis", type="primary"):
             for column, image_path in zip(image_columns, image_paths):
                 if image_path.exists():
                     column.image(str(image_path), caption=image_path.name)
+
+import json
+from src.predictor import predict_message
+
+st.markdown("---")
+st.header("🧪 Test Pretrained Model Interactively")
+model_path = PROJECT_ROOT / "reports" / "model" / "best_model.joblib"
+test_info_path = PROJECT_ROOT / "reports" / "model" / "test_info.json"
+
+if model_path.exists():
+    test_info = {}
+    if test_info_path.exists():
+        try:
+            test_info = json.loads(test_info_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+    task_title = test_info.get("task_summary", "Trained Model Classifier")
+    default_sample = test_info.get(
+        "sample_input", "Enter sample text to classify here..."
+    )
+    custom_code = test_info.get(
+        "custom_code",
+        """import joblib
+import pandas as pd
+
+# Load trained model
+model = joblib.load('best_model.joblib')
+
+# Pass text feature in DataFrame
+sample_text = "Enter text sample here..."
+input_data = pd.DataFrame({'__combined_text__': [sample_text]})
+
+# Get prediction output
+prediction = model.predict(input_data)[0]
+print("Prediction Result:", prediction)
+""",
+    )
+
+    st.subheader(f"📌 Task: {task_title}")
+
+    st.markdown("### 💻 Custom Python Testing Code")
+    st.caption("Copy and run this code anywhere alongside `best_model.joblib`:")
+    st.code(custom_code, language="python")
+
+    st.markdown("### 🎯 Live Model Prediction Sandbox")
+    test_input = st.text_area(
+        "Enter a test message:",
+        value=default_sample,
+        height=90,
+        key="test_message_input",
+    )
+
+    if st.button("Run Test Prediction", type="secondary"):
+        if test_input.strip():
+            try:
+                result = predict_message(test_input, str(model_path))
+                st.subheader("Prediction Result")
+                col1, col2 = st.columns(2)
+                col1.metric("Predicted Label", result.get("prediction", "N/A"))
+
+                if "confidence" in result:
+                    col2.metric("Confidence Score", result["confidence"])
+                elif "decision_score" in result:
+                    col2.metric("Decision Score", result["decision_score"])
+
+                if "class_probabilities" in result:
+                    st.write(
+                        f"**Class Probabilities:** `{result['class_probabilities']}`"
+                    )
+            except Exception as err:
+                st.error(f"Prediction error: {err}")
+        else:
+            st.warning("Please enter a message to test.")
+else:
+    st.info(
+        "No trained model found yet (`reports/model/best_model.joblib`). "
+        "Run the Autonomous Analysis above to generate the model."
+    )
+
+

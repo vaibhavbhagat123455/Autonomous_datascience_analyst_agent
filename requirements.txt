@@ -7,6 +7,7 @@ scikit-learn
 matplotlib
 seaborn
 langchain-google-genai
+langchain-openai
 joblib
 pytest
 streamlit

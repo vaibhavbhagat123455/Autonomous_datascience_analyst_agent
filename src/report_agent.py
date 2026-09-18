@@ -77,6 +77,14 @@ def _metric_rows(model_report: dict[str, Any]) -> str:
     return "".join(rows)
 
 
+import base64
+
+def _img_tag(image_path: Path, alt_text: str) -> str:
+    if image_path.exists():
+        data = base64.b64encode(image_path.read_bytes()).decode("utf-8")
+        return f'<img src="data:image/png;base64,{data}" alt="{html.escape(alt_text)}">'
+    return f'<p><em>Image ({html.escape(alt_text)}) not found.</em></p>'
+
 def create_final_report(
     user_question: str,
     cleaning_report: dict[str, Any],
@@ -109,6 +117,13 @@ def create_final_report(
 
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
+    reports_dir = output_file.parent
+
+    cm_img = _img_tag(reports_dir / "model" / "confusion_matrix.png", "Confusion matrix")
+    eda_num_img = _img_tag(reports_dir / "eda" / "numeric_distributions.png", "Numeric distributions")
+    eda_corr_img = _img_tag(reports_dir / "eda" / "correlation_heatmap.png", "Correlation heatmap")
+    eda_cat_img = _img_tag(reports_dir / "eda" / "categorical_distributions.png", "Categorical distributions")
+    exp_img = _img_tag(reports_dir / "explainability" / "feature_importance.png", "Feature importance")
 
     html_report = f"""<!DOCTYPE html>
 <html lang="en">
@@ -122,7 +137,7 @@ def create_final_report(
     table {{ border-collapse: collapse; width: 100%; }}
     th, td {{ border: 1px solid #d1d5db; padding: 8px; text-align: left; }}
     th {{ background: #e5eefc; }}
-    img {{ max-width: 100%; border: 1px solid #d1d5db; margin: 10px 0; }}
+    img {{ max-width: 100%; border: 1px solid #d1d5db; margin: 10px 0; border-radius: 4px; }}
     pre {{ white-space: pre-wrap; background: #f3f4f6; padding: 15px; border-radius: 6px; }}
   </style>
 </head>
@@ -155,19 +170,20 @@ def create_final_report(
       <tr><th>Metric</th><th>Score</th></tr>
       {_metric_rows(model_report)}
     </table>
-    <img src="model/confusion_matrix.png" alt="Confusion matrix">
+    <h3>Confusion Matrix</h3>
+    {cm_img}
   </div>
 
   <div class="card">
     <h2>Exploratory Analysis</h2>
-    <img src="eda/numeric_distributions.png" alt="Numeric distributions">
-    <img src="eda/correlation_heatmap.png" alt="Correlation heatmap">
-    <img src="eda/categorical_distributions.png" alt="Categorical distributions">
+    {eda_num_img}
+    {eda_corr_img}
+    {eda_cat_img}
   </div>
 
   <div class="card">
     <h2>Explainability</h2>
-    <img src="explainability/feature_importance.png" alt="Feature importance">
+    {exp_img}
     <p>Detailed feature importance is available in <code>explainability/feature_importance.csv</code>.</p>
   </div>
 </body>
@@ -176,12 +192,26 @@ def create_final_report(
 
     output_file.write_text(html_report, encoding="utf-8")
 
+    test_info = generate_model_test_info(user_question, model_report)
+    test_info_file = output_file.parent / "model" / "test_info.json"
+    test_info_file.write_text(json.dumps(test_info, indent=2), encoding="utf-8")
+
     integration_file = output_file.parent / "model" / "integration_guide.md"
     integration_file.parent.mkdir(parents=True, exist_ok=True)
     integration_file.write_text(
-        f"""# Trained Model Integration Guide
+        f"""# Trained Model Integration Guide ({test_info.get('task_summary', 'Model Testing')})
 
 The trained model is `{model_report.get('best_model', 'best_model')}` and is saved as `best_model.joblib`.
+
+## Quick Standalone Testing (`test_model.py`)
+
+A standalone tester script `test_model.py` is saved in the same directory as `best_model.joblib`.
+
+To test custom input messages interactively in your terminal:
+
+```bash
+python test_model.py
+```
 
 ## Installation
 
@@ -189,22 +219,20 @@ The trained model is `{model_report.get('best_model', 'best_model')}` and is sav
 pip install pandas joblib scikit-learn
 ```
 
-## Load and use the model
+## Load and use the model programmatically
 
 ```python
-import joblib
-import pandas as pd
-
-model = joblib.load('best_model.joblib')
-message = 'Your message text goes here'
-input_data = pd.DataFrame({{'__combined_text__': [message]}})
-prediction = model.predict(input_data)[0]
-print(prediction)
+{test_info.get('custom_code', '')}
 ```
+
+## Sample Input Examples
+
+- **Sample 1**: `{test_info.get('sample_input', '')}`
+- **Sample 2**: `{test_info.get('sample_input_2', '')}`
 
 ## Important
 
-This model expects the same text preprocessing used during training. For this project, pass the message as the `__combined_text__` feature. Use the model only for the same type of text classification task and label structure.
+This model expects text preprocessing via the `__combined_text__` feature column. Use the model for classification matching target column `{model_report.get('target_column')}`.
 """,
         encoding="utf-8",
     )
@@ -212,8 +240,85 @@ This model expects the same text preprocessing used during training. For this pr
     report_data = {
         "output_path": str(output_file),
         "integration_report_path": str(integration_file),
+        "test_info_path": str(test_info_file),
         "best_model": model_report.get("best_model"),
         "narrative_generated_by": "Google Gemini",
     }
 
     return str(output_file), report_data
+
+
+def generate_model_test_info(
+    user_question: str,
+    model_report: dict[str, Any],
+) -> dict[str, Any]:
+    """Ask Gemini to generate dataset-specific test inputs and code snippet for the trained model."""
+
+    target_col = model_report.get("target_column", "Target")
+    text_cols = model_report.get("text_columns", ["text"])
+    class_dist = model_report.get("class_distribution", {})
+    classes = [str(c) for c in class_dist.keys()]
+
+    prompt = f"""
+You are an expert Data Science Agent.
+We have trained a machine learning model based on the user request.
+
+User Question / Goal: {user_question}
+Target Column: {target_col}
+Text Features Used: {text_cols}
+Target Output Classes: {classes}
+
+Generate a JSON object with:
+1. "task_summary": A short title for this specific task (e.g. "Sentiment Analysis", "Spam Detection", "Topic Classifier").
+2. "sample_input": One realistic sample text string for testing this specific model.
+3. "sample_input_2": A second realistic sample text string for a different target class label.
+4. "custom_code": Clean, ready-to-run Python code snippet showing how to load 'best_model.joblib', format input with '__combined_text__', and print the prediction output for target '{target_col}'.
+
+Return ONLY valid JSON matching this schema:
+{{
+  "task_summary": "...",
+  "sample_input": "...",
+  "sample_input_2": "...",
+  "custom_code": "..."
+}}
+"""
+    try:
+        response = create_gemini_model().invoke(prompt)
+        content = response.content
+        if isinstance(content, list):
+            content = "\n".join(
+                str(item.get("text", item)) if isinstance(item, dict) else str(item)
+                for item in content
+            )
+        import re
+
+        match = re.search(r"\{.*\}", str(content), re.DOTALL)
+        if match:
+            return json.loads(match.group())
+    except Exception:
+        pass
+
+    class_str = ", ".join(classes) if classes else "class labels"
+    sample1 = "Enter your test text sample here."
+    sample2 = "Enter another sample input here."
+    code = f"""import joblib
+import pandas as pd
+
+# Load trained model for target: {target_col}
+model = joblib.load('best_model.joblib')
+
+# Prepare text input DataFrame
+sample_text = "{sample1}"
+input_data = pd.DataFrame({{'__combined_text__': [sample_text]}})
+
+# Predict output label ({class_str})
+prediction = model.predict(input_data)[0]
+print("Predicted {target_col}:", prediction)
+"""
+    return {
+        "task_summary": f"{target_col} Classifier",
+        "sample_input": sample1,
+        "sample_input_2": sample2,
+        "custom_code": code,
+    }
+

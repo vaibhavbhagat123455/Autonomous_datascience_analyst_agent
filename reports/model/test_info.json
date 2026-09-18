@@ -1,0 +1,6 @@
+{
+  "task_summary": "label Classifier",
+  "sample_input": "Enter your test text sample here.",
+  "sample_input_2": "Enter another sample input here.",
+  "custom_code": "import joblib\nimport pandas as pd\n\n# Load trained model for target: label\nmodel = joblib.load('best_model.joblib')\n\n# Prepare text input DataFrame\nsample_text = \"Enter your test text sample here.\"\ninput_data = pd.DataFrame({'__combined_text__': [sample_text]})\n\n# Predict output label (0, 1)\nprediction = model.predict(input_data)[0]\nprint(\"Predicted label:\", prediction)\n"
+}
