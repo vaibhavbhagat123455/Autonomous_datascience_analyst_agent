@@ -21,17 +21,32 @@ pip install pandas joblib scikit-learn
 ## Load and use the model programmatically
 
 ```python
+import pandas as pd
 import joblib
+
+# Load the trained model
 model = joblib.load('best_model.joblib')
-text = "Sample email text here"
-prediction = model.predict([[text]])
-print(f'Predicted category: {prediction[0]}')
+
+# Prepare input data using the required '__combined_text__' formatting
+data = pd.DataFrame({
+    '__combined_text__': [
+        "Congratulations! You've been selected to win a free vacation to Hawaii. Click the link to claim your prize now!",
+        "Hey, are we still meeting for lunch tomorrow at 12 PM? Let me know if you need to reschedule."
+    ]
+})
+
+# Make predictions for target 'Category'
+predictions = model.predict(data)
+
+# Output the results
+for text, pred in zip(data['__combined_text__'], predictions):
+    print(f"Message: {text[:50]}... --> Prediction: {pred}")
 ```
 
 ## Sample Input Examples
 
-- **Sample 1**: `Meeting confirmation: Please find attached the agenda.`
-- **Sample 2**: `URGENT! Your account will be closed unless you click here: http://maliciouslink.com`
+- **Sample 1**: `Congratulations! You've been selected to win a free vacation to Hawaii. Click the link to claim your prize now!`
+- **Sample 2**: `Hey, are we still meeting for lunch tomorrow at 12 PM? Let me know if you need to reschedule.`
 
 ## Important
 
