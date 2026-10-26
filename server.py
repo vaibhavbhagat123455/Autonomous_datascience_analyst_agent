@@ -10,6 +10,7 @@ from typing import Any, Dict
 import pandas as pd
 from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, request, send_file, send_from_directory
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -24,6 +25,9 @@ app = Flask(
     static_folder="web/static",
     static_url_path="/static",
 )
+
+# Enable CORS for all domains (allows Vercel frontend to query Render backend)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 reports_dir = PROJECT_ROOT / "reports"
 reports_dir.mkdir(parents=True, exist_ok=True)

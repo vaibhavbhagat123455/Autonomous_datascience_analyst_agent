@@ -3,6 +3,11 @@
 // Handles Tab Navigation, File Uploads, Server-Sent Events & Real-time Live Sandbox
 // ==========================================================================
 
+// Auto-detect backend URL:
+// 1. If running on Vercel or separate domain, reads from window.API_BASE_URL or localStorage
+// 2. Otherwise defaults to same origin (for local development or single-host deployments)
+const API_BASE = window.API_BASE_URL || localStorage.getItem('ANALYST_API_BASE') || '';
+
 document.addEventListener('DOMContentLoaded', () => {
   let uploadedFilePath = null;
   let activeEventSource = null;
@@ -26,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 2. Fetch Server Config
-  fetch('/api/config')
+  fetch(`${API_BASE}/api/config`)
     .then(r => r.json())
     .then(data => {
       const pill = document.getElementById('nav-llm-label');
@@ -84,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update UI indicator
     dropZone.style.opacity = '0.5';
 
-    fetch('/api/upload', {
+    fetch(`${API_BASE}/api/upload`, {
       method: 'POST',
       body: formData,
     })
@@ -205,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       activeEventSource.close();
     }
 
-    activeEventSource = new EventSource(`/api/run-stream?${params.toString()}`);
+    activeEventSource = new EventSource(`${API_BASE}/api/run-stream?${params.toString()}`);
 
     activeEventSource.onmessage = e => {
       try {
@@ -276,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 6. Load Completed Results
   function loadCompletedResults() {
-    fetch('/api/reports')
+    fetch(`${API_BASE}/api/reports`)
       .then(r => r.json())
       .then(data => {
         if (!data.model_report) return;
@@ -300,8 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Reload images with timestamp cache bust
         const t = new Date().getTime();
-        document.getElementById('res-cm-img').src = `/reports/model/confusion_matrix.png?t=${t}`;
-        document.getElementById('res-xai-img').src = `/reports/explainability/feature_importance.png?t=${t}`;
+        document.getElementById('res-cm-img').src = `${API_BASE}/reports/model/confusion_matrix.png?t=${t}`;
+        document.getElementById('res-xai-img').src = `${API_BASE}/reports/explainability/feature_importance.png?t=${t}`;
 
         // Reveal the main results section in tab 1
         resultsStage.classList.remove('hidden');
@@ -313,11 +318,17 @@ document.addEventListener('DOMContentLoaded', () => {
           emptyState.classList.add('hidden');
           galleryGrid.classList.remove('hidden');
 
-          document.getElementById('gallery-cm-img').src = `/reports/model/confusion_matrix.png?t=${t}`;
-          document.getElementById('gallery-xai-img').src = `/reports/explainability/feature_importance.png?t=${t}`;
-          document.getElementById('gallery-cat-img').src = `/reports/eda/categorical_distributions.png?t=${t}`;
-          document.getElementById('gallery-num-img').src = `/reports/eda/numeric_distributions.png?t=${t}`;
+          document.getElementById('gallery-cm-img').src = `${API_BASE}/reports/model/confusion_matrix.png?t=${t}`;
+          document.getElementById('gallery-xai-img').src = `${API_BASE}/reports/explainability/feature_importance.png?t=${t}`;
+          document.getElementById('gallery-cat-img').src = `${API_BASE}/reports/eda/categorical_distributions.png?t=${t}`;
+          document.getElementById('gallery-num-img').src = `${API_BASE}/reports/eda/numeric_distributions.png?t=${t}`;
         }
+
+        // Update download links with API_BASE
+        document.querySelectorAll('.artifacts-list a[href^="/api/download/"]').forEach(a => {
+          const path = a.getAttribute('href');
+          a.href = `${API_BASE}${path}`;
+        });
       });
   }
 
@@ -358,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    fetch('/api/predict', {
+    fetch(`${API_BASE}/api/predict`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: text })
@@ -400,6 +411,42 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 2000);
     });
   });
+
+  // 9. Settings Modal (Connect Vercel to Render)
+  const settingsModal = document.getElementById('settings-modal');
+  const btnOpenSettings = document.getElementById('btn-open-settings');
+  const btnCloseModal = document.getElementById('btn-close-modal');
+  const btnSaveBackend = document.getElementById('btn-save-backend');
+  const backendUrlInput = document.getElementById('backend-url-input');
+
+  if (backendUrlInput) {
+    backendUrlInput.value = localStorage.getItem('ANALYST_API_BASE') || '';
+  }
+
+  if (btnOpenSettings) {
+    btnOpenSettings.addEventListener('click', () => {
+      settingsModal.classList.remove('hidden');
+    });
+  }
+
+  if (btnCloseModal) {
+    btnCloseModal.addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+    });
+  }
+
+  if (btnSaveBackend) {
+    btnSaveBackend.addEventListener('click', () => {
+      const val = backendUrlInput.value.trim().replace(/\/+$/, '');
+      if (val) {
+        localStorage.setItem('ANALYST_API_BASE', val);
+      } else {
+        localStorage.removeItem('ANALYST_API_BASE');
+      }
+      settingsModal.classList.add('hidden');
+      window.location.reload();
+    });
+  }
 
   // Keep results and graphs hidden until a model prediction/run is actively completed
 });

@@ -11,3 +11,6 @@ langchain-openai>=1.7.0,<2.0.0
 joblib
 pytest
 streamlit
+flask>=3.0.0
+flask-cors>=6.0.0
+gunicorn>=21.2.0

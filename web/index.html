@@ -59,6 +59,9 @@
         <span class="pulse-indicator"></span>
         <span id="nav-llm-label">Gemini 2.5 Active</span>
       </div>
+      <button class="settings-btn" id="btn-open-settings" title="Backend Server Settings">
+        <i class="fa-solid fa-gear"></i>
+      </button>
       <a href="https://github.com/vaibhavbhagat123455/Autonomous_datascience_analyst_agent" target="_blank" class="github-btn" title="View Source on GitHub">
         <i class="fa-brands fa-github"></i>
       </a>
@@ -501,6 +504,28 @@ print("Prediction:", prediction)</code></pre>
     </section>
 
   </main>
+
+  <!-- Backend Settings Modal (For Vercel -> Render Connection) -->
+  <div id="settings-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-server text-blue"></i> Backend Connection Settings</h3>
+        <button class="btn-close-modal" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          When deployed on <b>Vercel</b>, enter your <b>Render Backend URL</b> below. Leave blank when running locally.
+        </p>
+        <div class="form-group">
+          <label for="backend-url-input">Render Backend URL</label>
+          <input type="text" id="backend-url-input" placeholder="https://autonomous-ds-analyst.onrender.com" class="styled-input">
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" id="btn-save-backend">Save & Connect</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modern Interactive JavaScript -->
   <script src="/static/app.js"></script>
