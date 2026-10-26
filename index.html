@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Data Science Analyst | NextGen AI Platform</title>
+  
+  <!-- Modern Inter & Plus Jakarta Sans Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="light-theme">
+
+  <!-- Background decorative glows -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="logo-box">
+        <i class="fa-solid fa-brain-circuit"></i>
+      </div>
+      <div>
+        <span class="brand-title">Analyst<span class="gradient-text">Agent</span></span>
+        <span class="brand-tag">LangGraph Orchestrated</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="tab-analyze">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Autonomous Run
+      </button>
+      <button class="nav-tab" data-tab="tab-sandbox">
+        <i class="fa-solid fa-flask-vial"></i> Live Sandbox
+      </button>
+      <button class="nav-tab" data-tab="tab-reports">
+        <i class="fa-solid fa-chart-pie"></i> Visual Insights
+      </button>
+      <button class="nav-tab" data-tab="tab-architecture">
+        <i class="fa-solid fa-diagram-project"></i> Architecture
+      </button>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="nav-actions">
+      <div class="llm-pill">
+        <span class="pulse-indicator"></span>
+        <span id="nav-llm-label">Gemini 2.5 Active</span>
+      </div>
+      <button class="settings-btn" id="btn-open-settings" title="Backend Server Settings">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+      <a href="https://github.com/vaibhavbhagat123455/Autonomous_datascience_analyst_agent" target="_blank" class="github-btn" title="View Source on GitHub">
+        <i class="fa-brands fa-github"></i>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: AUTONOMOUS RUN                                         -->
+    <!-- ============================================================ -->
+    <section id="tab-analyze" class="tab-pane active fade-in">
+      
+      <!-- Hero Header -->
+      <div class="hero-header">
+        <div class="badge-pill">
+          <i class="fa-solid fa-bolt text-amber"></i> End-to-End AutoML & XAI System
+        </div>
+        <h1>From Raw Dataset to Production Model <span class="gradient-text">in Seconds</span></h1>
+        <p class="hero-desc">
+          Drop any CSV or Excel file. Our deterministic LangGraph state machine handles profiling, sanitization, exploratory graphs, TF-IDF linear classifiers, and coefficient explanations without human code.
+        </p>
+      </div>
+
+      <!-- Main Input Grid -->
+      <div class="glass-grid">
+        
+        <!-- Left: Upload Card -->
+        <div class="card card-upload">
+          <div class="card-header">
+            <div class="card-icon blue"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <div>
+              <h3>1. Upload Research Dataset</h3>
+              <p>Supports .csv, .xlsx, .xls text datasets</p>
+            </div>
+          </div>
+
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" id="file-input" accept=".csv, .xlsx, .xls" hidden>
+            <div class="drop-zone-content">
+              <div class="upload-icon-circle">
+                <i class="fa-solid fa-file-arrow-up"></i>
+              </div>
+              <h4>Drag & drop file here</h4>
+              <p>or <button type="button" class="btn-link" onclick="document.getElementById('file-input').click()">browse from computer</button></p>
+              <div class="upload-specs">CSV / Excel with text & label columns</div>
+            </div>
+          </div>
+
+          <!-- File Uploaded Info Card (hidden by default) -->
+          <div id="file-info-badge" class="file-info-card hidden">
+            <div class="file-icon"><i class="fa-solid fa-file-csv"></i></div>
+            <div class="file-details">
+              <span class="file-name" id="file-name-display">dataset.csv</span>
+              <span class="file-meta" id="file-meta-display">5,573 rows • 2 columns</span>
+            </div>
+            <button class="btn-remove" id="btn-remove-file" title="Remove file"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <!-- Quick Preview Drawer -->
+          <div id="dataset-preview-container" class="preview-drawer hidden">
+            <div class="preview-header">
+              <span><i class="fa-solid fa-table-cells"></i> Dataset Schema Preview</span>
+              <span class="badge" id="preview-badge">0 Rows</span>
+            </div>
+            <div class="table-scroll">
+              <table id="preview-table">
+                <thead><tr id="preview-thead"></tr></thead>
+                <tbody id="preview-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Task & Control Card -->
+        <div class="card card-prompt">
+          <div class="card-header">
+            <div class="card-icon purple"><i class="fa-solid fa-pen-nib"></i></div>
+            <div>
+              <h3>2. Define Objective</h3>
+              <p>Natural language goal mapped into Pydantic schema</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="prompt-input">Task Instruction Prompt</label>
+            <textarea id="prompt-input" rows="4" placeholder="Describe your data science task...">Build a classification model to predict Category from Message. Compare the models and report accuracy, precision, recall, and F1 score.</textarea>
+          </div>
+
+          <div class="sample-chips">
+            <span class="chip-label">Quick Prompts:</span>
+            <button class="chip" data-prompt="Build a spam classification model on Message predicting Category with full explainability.">Spam Filter</button>
+            <button class="chip" data-prompt="Classify sentiments from the text column and generate decision matrix.">Sentiment Task</button>
+          </div>
+
+          <div class="execution-footer">
+            <button id="btn-run-agent" class="btn-primary" disabled>
+              <i class="fa-solid fa-play"></i> Run Autonomous Pipeline
+            </button>
+            <div class="privacy-notice">
+              <i class="fa-solid fa-shield-halved text-emerald"></i>
+              <span>Zero-hallucination guarantee via schema constraints</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Execution Progress Stage (Reveals when Run is clicked) -->
+      <div id="execution-stage" class="execution-stage hidden">
+        <div class="stage-header">
+          <div class="stage-title">
+            <div class="spinner-dot"></div>
+            <div>
+              <h3>Autonomous LangGraph Agent Traversing</h3>
+              <span id="stage-status-text">Initialising workflow state...</span>
+            </div>
+          </div>
+          <div class="progress-stats">
+            <span id="overall-percentage" class="percentage-label">0%</span>
+          </div>
+        </div>
+
+        <!-- Big Smooth Progress Bar -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="overall-progress-bar"></div>
+        </div>
+
+        <!-- 7 Agent Nodes Status Tracker -->
+        <div class="agents-timeline" id="agents-timeline">
+          <!-- Dynamically populated step cards with icons and states -->
+        </div>
+      </div>
+
+      <!-- Results & Metrics Section (Reveals upon completion) -->
+      <div id="results-stage" class="results-stage hidden">
+        
+        <div class="section-title-wrap">
+          <div>
+            <h2 class="section-title">Model Evaluation & Highlights</h2>
+            <p class="section-sub">Trained & validated on held-out 20% test partition (1,032 samples)</p>
+          </div>
+          <div class="champion-badge" id="champion-badge-text">
+            <i class="fa-solid fa-trophy"></i> Champion: LinearSVC
+          </div>
+        </div>
+
+        <!-- 4 Metric Cards -->
+        <div class="metrics-quad">
+          <div class="metric-glass-card">
+            <span class="metric-category">Overall Accuracy</span>
+            <div class="metric-number text-blue" id="res-accuracy">97.48%</div>
+            <span class="metric-trend"><i class="fa-solid fa-arrow-trend-up"></i> Top Score</span>
+          </div>
+          <div class="metric-glass-card">
+            <span class="metric-category">Weighted Precision</span>
+            <div class="metric-number text-purple" id="res-precision">97.44%</div>
+            <span class="metric-trend text-muted">Held-out test</span>
+          </div>
+          <div class="metric-glass-card">
+            <span class="metric-category">Weighted Recall</span>
+            <div class="metric-number text-emerald" id="res-recall">97.48%</div>
+            <span class="metric-trend text-muted">Held-out test</span>
+          </div>
+          <div class="metric-glass-card">
+            <span class="metric-category">Weighted F1-Score</span>
+            <div class="metric-number text-amber" id="res-f1">97.42%</div>
+            <span class="metric-trend"><i class="fa-solid fa-check-circle"></i> Selection Metric</span>
+          </div>
+        </div>
+
+        <!-- Artifacts & Visuals Dual Layout -->
+        <div class="results-dual-grid">
+          
+          <!-- Visuals Column -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon emerald"><i class="fa-solid fa-chart-column"></i></div>
+              <h3>Confusion Matrix & Explanations</h3>
+            </div>
+            <div class="visuals-row">
+              <div class="visual-box">
+                <img src="/reports/model/confusion_matrix.png" alt="Confusion Matrix" class="img-preview" id="res-cm-img">
+                <span>Confusion Matrix Heatmap</span>
+              </div>
+              <div class="visual-box">
+                <img src="/reports/explainability/feature_importance.png" alt="Feature Importance" class="img-preview" id="res-xai-img">
+                <span>Top Influential Coefficients</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Center Column -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon blue"><i class="fa-solid fa-box-archive"></i></div>
+              <h3>Generated Artifacts & Exports</h3>
+            </div>
+            <div class="artifacts-list">
+              <a href="/api/download/final_report" class="artifact-item" target="_blank">
+                <div class="artifact-icon orange"><i class="fa-solid fa-file-invoice"></i></div>
+                <div class="artifact-details">
+                  <strong>Standalone HTML Report</strong>
+                  <span>Base64 embedded interactive visual summary</span>
+                </div>
+                <i class="fa-solid fa-download download-arrow"></i>
+              </a>
+
+              <a href="/api/download/best_model" class="artifact-item">
+                <div class="artifact-icon purple"><i class="fa-solid fa-cubes-stacked"></i></div>
+                <div class="artifact-details">
+                  <strong>Serialized Model (best_model.joblib)</strong>
+                  <span>Production-ready scikit-learn pipeline</span>
+                </div>
+                <i class="fa-solid fa-download download-arrow"></i>
+              </a>
+
+              <a href="/api/download/test_model" class="artifact-item">
+                <div class="artifact-icon emerald"><i class="fa-solid fa-terminal"></i></div>
+                <div class="artifact-details">
+                  <strong>Test Suite Script (test_model.py)</strong>
+                  <span>Dataset-aware verification code</span>
+                </div>
+                <i class="fa-solid fa-download download-arrow"></i>
+              </a>
+
+              <a href="/api/download/cleaned_dataset" class="artifact-item">
+                <div class="artifact-icon blue"><i class="fa-solid fa-file-csv"></i></div>
+                <div class="artifact-details">
+                  <strong>Cleaned Tabular Dataset</strong>
+                  <span>Deduplicated and anomaly-filtered data</span>
+                </div>
+                <i class="fa-solid fa-download download-arrow"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: LIVE PREDICTION SANDBOX                                -->
+    <!-- ============================================================ -->
+    <section id="tab-sandbox" class="tab-pane fade-in hidden">
+      
+      <div class="hero-header">
+        <div class="badge-pill"><i class="fa-solid fa-microchip text-purple"></i> Interactive Deployment</div>
+        <h1>Live Model <span class="gradient-text">Inference Sandbox</span></h1>
+        <p class="hero-desc">Test real incoming strings directly against your serialized pipeline in real-time.</p>
+      </div>
+
+      <div class="sandbox-grid">
+        <!-- Input Sandbox Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon blue"><i class="fa-solid fa-comment-dots"></i></div>
+            <div>
+              <h3>Message Input</h3>
+              <p>Enter any SMS, email, or text sequence</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <textarea id="sandbox-input" rows="4" placeholder="Enter message text...">WINNER! You have won a £1,000 cash prize or a guaranteed holiday trip! Call 09061743810 now to claim.</textarea>
+          </div>
+
+          <div class="sample-chips">
+            <span class="chip-label">Quick Test:</span>
+            <button class="chip spam-chip" id="chip-sample-spam">🚫 Solicitous Spam</button>
+            <button class="chip ham-chip" id="chip-sample-ham">✅ Casual Conversation</button>
+          </div>
+
+          <button id="btn-predict-sandbox" class="btn-primary mt-4">
+            <i class="fa-solid fa-bolt"></i> Classify Message Instantly
+          </button>
+        </div>
+
+        <!-- Output Sandbox Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon purple"><i class="fa-solid fa-gauge-high"></i></div>
+            <div>
+              <h3>Model Decision</h3>
+              <p>Real-time classification boundary inference</p>
+            </div>
+          </div>
+
+          <div id="sandbox-result-box" class="sandbox-result-wrapper">
+            <div class="idle-state">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <p>Click "Classify Message Instantly" to test the pipeline</p>
+            </div>
+          </div>
+
+          <!-- Code Integration Snippet -->
+          <div class="code-box-header">
+            <span><i class="fa-brands fa-python"></i> Production Python Integration</span>
+            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Copy</button>
+          </div>
+          <pre class="code-block"><code id="code-snippet-box">import joblib
+import pandas as pd
+
+# 1. Load serialized pipeline
+model = joblib.load('best_model.joblib')
+
+# 2. Package text in DataFrame
+df = pd.DataFrame({'__combined_text__': ['Your message here']})
+
+# 3. Predict class label
+prediction = model.predict(df)[0]
+print("Prediction:", prediction)</code></pre>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: VISUAL INSIGHTS & REPORTS                              -->
+    <!-- ============================================================ -->
+    <section id="tab-reports" class="tab-pane fade-in hidden">
+      
+      <div class="hero-header">
+        <div class="badge-pill"><i class="fa-solid fa-chart-line text-blue"></i> Exploratory Data Analysis & XAI</div>
+        <h1>Analytical Artifacts & <span class="gradient-text">Evidence Plots</span></h1>
+        <p class="hero-desc">Inspect all distribution charts, correlation heatmaps, and coefficient rankings.</p>
+      </div>
+
+      <!-- Placeholder when pipeline has not been run yet -->
+      <div id="reports-empty-state" class="card text-center" style="padding: 3.5rem 1.5rem; text-align: center;">
+        <div style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;">
+          <i class="fa-solid fa-chart-simple"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">No Reports Available Yet</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.90rem;">
+          Please run the Autonomous Pipeline in the <b>Autonomous Run</b> tab first. Once the agents complete training and profiling, all plots, heatmaps, and XAI evaluations will automatically appear here.
+        </p>
+        <button class="btn-primary" style="display: inline-flex; width: auto; margin: 0 auto; padding: 10px 24px;" onclick="document.querySelector('[data-tab=\'tab-analyze\']').click()">
+          <i class="fa-solid fa-arrow-left"></i> Go to Autonomous Run
+        </button>
+      </div>
+
+      <div class="gallery-grid hidden" id="reports-gallery-grid">
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="/reports/model/confusion_matrix.png" alt="Confusion Matrix" id="gallery-cm-img">
+          </div>
+          <div class="gallery-info">
+            <h4>Confusion Matrix Heatmap</h4>
+            <p>Evaluation across 1,032 test examples with false-positive rate under 0.66%.</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="/reports/explainability/feature_importance.png" alt="Feature Importance" id="gallery-xai-img">
+          </div>
+          <div class="gallery-info">
+            <h4>XAI Learned Decision Weights</h4>
+            <p>Coefficient mappings ranking terms from high spam indicators to legitimate tokens.</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="/reports/eda/categorical_distributions.png" alt="Category Distribution" id="gallery-cat-img">
+          </div>
+          <div class="gallery-info">
+            <h4>Class Imbalance Distribution</h4>
+            <p>Sanitized dataset class distribution showing the 7.05:1 ratio between Ham and Spam.</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="/reports/eda/numeric_distributions.png" alt="Numeric Distributions" id="gallery-num-img">
+          </div>
+          <div class="gallery-info">
+            <h4>Feature Spread & Histograms</h4>
+            <p>Automated distributional plots generated during the exploratory phase.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: ARCHITECTURE & RESEARCH                                -->
+    <!-- ============================================================ -->
+    <section id="tab-architecture" class="tab-pane fade-in hidden">
+      
+      <div class="hero-header">
+        <div class="badge-pill"><i class="fa-solid fa-diagram-project text-purple"></i> Multi-Agent Architecture</div>
+        <h1>Deterministic <span class="gradient-text">LangGraph State Machine</span></h1>
+        <p class="hero-desc">Separating high-level LLM reasoning from compiled algorithmic execution.</p>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="card-icon blue"><i class="fa-solid fa-sitemap"></i></div>
+          <div>
+            <h3>7-Agent Directed Acyclic Graph (DAG)</h3>
+            <p>Deterministic sequence with typed AnalystState memory container</p>
+          </div>
+        </div>
+        <div class="architecture-diagram-container">
+          <img src="/static/fig1_architecture.png" alt="System Architecture Flowchart" class="architecture-img">
+        </div>
+      </div>
+
+      <div class="research-grid">
+        <div class="card">
+          <h4><i class="fa-solid fa-shield-halved text-emerald"></i> Anti-Hallucination Grounding</h4>
+          <p>
+            Standard LLM code generation crashes when the LLM invents column names. In our system, the Data Profiler first computes real schema types, which are injected into a strict Pydantic v2 <code class="inline-code">OrchestratorPlan</code> contract. Any invalid column name causes immediate validation halts.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4><i class="fa-solid fa-filter-circle-xmark text-blue"></i> Singleton Noise Pruning</h4>
+          <p>
+            Real-world datasets contain single-instance corrupt labels (e.g., malformed JSON fragments) that trigger fatal exceptions in scikit-learn stratified splits. Our Data Cleaner automatically prunes classes with <code class="inline-code">count &lt; 2</code>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4><i class="fa-solid fa-lock text-purple"></i> Privacy Sovereignty</h4>
+          <p>
+            Seamlessly switch between cloud Google Gemini and 100% private offline local models (Qwen3-14B via local loopback), ensuring enterprise data confidentiality without code modifications.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Backend Settings Modal (For Vercel -> Render Connection) -->
+  <div id="settings-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-server text-blue"></i> Backend Connection Settings</h3>
+        <button class="btn-close-modal" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          When deployed on <b>Vercel</b>, enter your <b>Render Backend URL</b> below. Leave blank when running locally.
+        </p>
+        <div class="form-group">
+          <label for="backend-url-input">Render Backend URL</label>
+          <input type="text" id="backend-url-input" placeholder="https://autonomous-ds-analyst.onrender.com" class="styled-input">
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" id="btn-save-backend">Save & Connect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Interactive JavaScript -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
