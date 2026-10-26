@@ -55,54 +55,31 @@ class OrchestratorPlan(BaseModel):
 
 def create_llm_model():
     """
-    Create the LLM instance (Local OpenAI-compatible server like Bionic/LM Studio or Gemini).
-    Environment variables:
-    - LLM_PROVIDER: "local" or "gemini" (default: "local" if LOCAL_LLM_URL is set, otherwise "gemini")
-    - LOCAL_LLM_URL: default "http://localhost:1234/v1"
-    - LOCAL_LLM_MODEL: default "qwen3-4b"
-    - LOCAL_LLM_API_KEY: default "not-needed"
-    - GOOGLE_API_KEY & GEMINI_MODEL (for Google Gemini)
+    Create the LLM instance based on LLM_PROVIDER ('gemini' or 'local').
     """
+    provider = os.getenv("LLM_PROVIDER", "gemini").strip().lower()
 
-    provider = os.getenv("LLM_PROVIDER", "local").lower()
+    if provider == "gemini":
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if api_key:
+            model_name = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest")
+            return ChatGoogleGenerativeAI(
+                model=model_name,
+                temperature=0,
+                google_api_key=api_key,
+            )
 
-    if provider == "local" or os.getenv("LOCAL_LLM_URL"):
-        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1235/v1")
-        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen/qwen3-14b")
-        api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
+    # Local fallback
+    base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1235/v1")
+    model_name = os.getenv("LOCAL_LLM_MODEL", "qwen3-4b")
+    api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
 
-        return ChatOpenAI(
-            base_url=base_url,
-            model=model_name,
-            api_key=api_key,
-            temperature=0,
-            timeout=120,
-        )
-
-    api_key = os.getenv("GOOGLE_API_KEY")
-
-    if not api_key:
-        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1235/v1")
-        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen/qwen3-14b")
-        api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
-
-        return ChatOpenAI(
-            base_url=base_url,
-            model=model_name,
-            api_key=api_key,
-            temperature=0,
-            timeout=120,
-        )
-
-    model_name = os.getenv(
-        "GEMINI_MODEL",
-        "gemini-2.5-flash",
-    )
-
-    return ChatGoogleGenerativeAI(
+    return ChatOpenAI(
+        base_url=base_url,
         model=model_name,
+        api_key=api_key,
         temperature=0,
-        google_api_key=api_key,
+        timeout=120,
     )
 
 

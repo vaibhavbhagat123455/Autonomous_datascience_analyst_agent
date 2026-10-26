@@ -267,11 +267,25 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("##### ⚙️ Configuration")
 
-    llm_provider = st.selectbox(
+    llm_provider_choice = st.selectbox(
         "LLM Provider",
-        ["Local (Qwen3-14B)", "Cloud (Gemini 2.5 Flash)"],
-        help="Local = 100% private, no data leaves your machine.",
+        ["Cloud (Gemini)", "Local (Qwen3-14B)"],
+        index=0 if os.getenv("LLM_PROVIDER", "gemini").lower() == "gemini" else 1,
+        help="Gemini uses your GOOGLE_API_KEY from .env; Local uses your private OpenAI-compatible endpoint.",
     )
+
+    if "Gemini" in llm_provider_choice:
+        os.environ["LLM_PROVIDER"] = "gemini"
+        st.markdown(
+            "<div style='font-size:0.75rem; color:#4ade80;'>● Connected via Gemini API</div>",
+            unsafe_allow_html=True,
+        )
+    else:
+        os.environ["LLM_PROVIDER"] = "local"
+        st.markdown(
+            "<div style='font-size:0.75rem; color:#facc15;'>● Local Qwen3 Mode</div>",
+            unsafe_allow_html=True,
+        )
 
     st.markdown("---")
     st.markdown(
