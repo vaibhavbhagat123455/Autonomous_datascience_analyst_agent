@@ -4,9 +4,17 @@
 // ==========================================================================
 
 // Auto-detect backend URL:
-// 1. If running on Vercel or separate domain, reads from window.API_BASE_URL or localStorage
-// 2. Otherwise defaults to same origin (for local development or single-host deployments)
-const API_BASE = window.API_BASE_URL || localStorage.getItem('ANALYST_API_BASE') || '';
+// 1. If user set a custom URL in localStorage, use it.
+// 2. If running on localhost or on the Render backend itself, use relative origin ('').
+// 3. Otherwise (e.g. running on Vercel), default automatically to your live Render backend!
+const isLocalOrSameOrigin = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.hostname.includes('onrender.com');
+
+const DEFAULT_RENDER_BACKEND = 'https://autonomous-ds-analyst.onrender.com';
+
+const API_BASE = localStorage.getItem('ANALYST_API_BASE') || 
+                 (isLocalOrSameOrigin ? '' : DEFAULT_RENDER_BACKEND);
 
 document.addEventListener('DOMContentLoaded', () => {
   let uploadedFilePath = null;
