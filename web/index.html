@@ -392,10 +392,24 @@ print("Prediction:", prediction)</code></pre>
         <p class="hero-desc">Inspect all distribution charts, correlation heatmaps, and coefficient rankings.</p>
       </div>
 
-      <div class="gallery-grid">
+      <!-- Placeholder when pipeline has not been run yet -->
+      <div id="reports-empty-state" class="card text-center" style="padding: 3.5rem 1.5rem; text-align: center;">
+        <div style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;">
+          <i class="fa-solid fa-chart-simple"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">No Reports Available Yet</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.90rem;">
+          Please run the Autonomous Pipeline in the <b>Autonomous Run</b> tab first. Once the agents complete training and profiling, all plots, heatmaps, and XAI evaluations will automatically appear here.
+        </p>
+        <button class="btn-primary" style="display: inline-flex; width: auto; margin: 0 auto; padding: 10px 24px;" onclick="document.querySelector('[data-tab=\'tab-analyze\']').click()">
+          <i class="fa-solid fa-arrow-left"></i> Go to Autonomous Run
+        </button>
+      </div>
+
+      <div class="gallery-grid hidden" id="reports-gallery-grid">
         <div class="gallery-card">
           <div class="gallery-img-wrap">
-            <img src="/reports/model/confusion_matrix.png" alt="Confusion Matrix">
+            <img src="/reports/model/confusion_matrix.png" alt="Confusion Matrix" id="gallery-cm-img">
           </div>
           <div class="gallery-info">
             <h4>Confusion Matrix Heatmap</h4>
@@ -405,7 +419,7 @@ print("Prediction:", prediction)</code></pre>
 
         <div class="gallery-card">
           <div class="gallery-img-wrap">
-            <img src="/reports/explainability/feature_importance.png" alt="Feature Importance">
+            <img src="/reports/explainability/feature_importance.png" alt="Feature Importance" id="gallery-xai-img">
           </div>
           <div class="gallery-info">
             <h4>XAI Learned Decision Weights</h4>
@@ -415,7 +429,7 @@ print("Prediction:", prediction)</code></pre>
 
         <div class="gallery-card">
           <div class="gallery-img-wrap">
-            <img src="/reports/eda/categorical_distributions.png" alt="Category Distribution">
+            <img src="/reports/eda/categorical_distributions.png" alt="Category Distribution" id="gallery-cat-img">
           </div>
           <div class="gallery-info">
             <h4>Class Imbalance Distribution</h4>
@@ -425,7 +439,7 @@ print("Prediction:", prediction)</code></pre>
 
         <div class="gallery-card">
           <div class="gallery-img-wrap">
-            <img src="/reports/eda/numeric_distributions.png" alt="Numeric Distributions">
+            <img src="/reports/eda/numeric_distributions.png" alt="Numeric Distributions" id="gallery-num-img">
           </div>
           <div class="gallery-info">
             <h4>Feature Spread & Histograms</h4>

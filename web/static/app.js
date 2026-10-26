@@ -303,7 +303,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('res-cm-img').src = `/reports/model/confusion_matrix.png?t=${t}`;
         document.getElementById('res-xai-img').src = `/reports/explainability/feature_importance.png?t=${t}`;
 
+        // Reveal the main results section in tab 1
         resultsStage.classList.remove('hidden');
+
+        // Reveal Visual Insights Gallery in tab 3
+        const emptyState = document.getElementById('reports-empty-state');
+        const galleryGrid = document.getElementById('reports-gallery-grid');
+        if (emptyState && galleryGrid) {
+          emptyState.classList.add('hidden');
+          galleryGrid.classList.remove('hidden');
+
+          document.getElementById('gallery-cm-img').src = `/reports/model/confusion_matrix.png?t=${t}`;
+          document.getElementById('gallery-xai-img').src = `/reports/explainability/feature_importance.png?t=${t}`;
+          document.getElementById('gallery-cat-img').src = `/reports/eda/categorical_distributions.png?t=${t}`;
+          document.getElementById('gallery-num-img').src = `/reports/eda/numeric_distributions.png?t=${t}`;
+        }
       });
   }
 
@@ -387,6 +401,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Preload results if already present
-  loadCompletedResults();
+  // Keep results and graphs hidden until a model prediction/run is actively completed
 });
