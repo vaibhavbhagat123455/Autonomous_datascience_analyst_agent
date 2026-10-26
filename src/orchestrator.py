@@ -67,8 +67,8 @@ def create_llm_model():
     provider = os.getenv("LLM_PROVIDER", "local").lower()
 
     if provider == "local" or os.getenv("LOCAL_LLM_URL"):
-        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1234/v1")
-        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen3-4b")
+        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1235/v1")
+        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen/qwen3-14b")
         api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
 
         return ChatOpenAI(
@@ -76,13 +76,14 @@ def create_llm_model():
             model=model_name,
             api_key=api_key,
             temperature=0,
+            timeout=120,
         )
 
     api_key = os.getenv("GOOGLE_API_KEY")
 
     if not api_key:
-        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1234/v1")
-        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen3-4b")
+        base_url = os.getenv("LOCAL_LLM_URL", "http://localhost:1235/v1")
+        model_name = os.getenv("LOCAL_LLM_MODEL", "qwen/qwen3-14b")
         api_key = os.getenv("LOCAL_LLM_API_KEY", "not-needed")
 
         return ChatOpenAI(
@@ -90,6 +91,7 @@ def create_llm_model():
             model=model_name,
             api_key=api_key,
             temperature=0,
+            timeout=120,
         )
 
     model_name = os.getenv(

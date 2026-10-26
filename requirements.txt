@@ -1,4 +1,4 @@
-langgraph
+langgraph>=1.2.0,<2.0.0
 pandas
 openpyxl
 numpy
@@ -6,8 +6,8 @@ python-dotenv
 scikit-learn
 matplotlib
 seaborn
-langchain-google-genai
-langchain-openai
+langchain-google-genai>=4.4.0,<5.0.0
+langchain-openai>=1.7.0,<2.0.0
 joblib
 pytest
 streamlit

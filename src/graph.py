@@ -156,7 +156,8 @@ def route_after_eda(
 
 def model_selector_node(
     state: AnalystState,
-    runtime: Runtime[RunContext],
+    runtime: Runtime[RunContext] | None = None,
+    config: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Select and train a real classification model."""
 
@@ -170,8 +171,11 @@ def model_selector_node(
                 "errors": ["A target column is required for classification."],
             }
 
-        context = runtime.context or {}
-        progress_callback = context.get("progress_callback")
+        progress_callback = None
+        if runtime and hasattr(runtime, "context") and runtime.context:
+            progress_callback = runtime.context.get("progress_callback")
+        elif config and "configurable" in config:
+            progress_callback = config["configurable"].get("progress_callback")
 
         report, artifacts = train_classification_models(
             cleaned_dataset_path=state["cleaned_dataset_path"],
