@@ -1,13 +1,5 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/static/(.*)",
-      "destination": "/web/static/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/web/$1"
-    }
-  ]
+  "framework": null,
+  "outputDirectory": "web",
+  "cleanUrls": true
 }
