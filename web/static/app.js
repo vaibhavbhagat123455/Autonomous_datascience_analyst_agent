@@ -433,41 +433,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 9. Settings Modal (Connect Vercel to Render)
-  const settingsModal = document.getElementById('settings-modal');
-  const btnOpenSettings = document.getElementById('btn-open-settings');
-  const btnCloseModal = document.getElementById('btn-close-modal');
-  const btnSaveBackend = document.getElementById('btn-save-backend');
-  const backendUrlInput = document.getElementById('backend-url-input');
-
-  if (backendUrlInput) {
-    backendUrlInput.value = localStorage.getItem('ANALYST_API_BASE') || '';
-  }
-
-  if (btnOpenSettings) {
-    btnOpenSettings.addEventListener('click', () => {
-      settingsModal.classList.remove('hidden');
-    });
-  }
-
-  if (btnCloseModal) {
-    btnCloseModal.addEventListener('click', () => {
-      settingsModal.classList.add('hidden');
-    });
-  }
-
-  if (btnSaveBackend) {
-    btnSaveBackend.addEventListener('click', () => {
-      const val = backendUrlInput.value.trim().replace(/\/+$/, '');
-      if (val) {
-        localStorage.setItem('ANALYST_API_BASE', val);
-      } else {
-        localStorage.removeItem('ANALYST_API_BASE');
-      }
-      settingsModal.classList.add('hidden');
-      window.location.reload();
-    });
-  }
-
   // Keep results and graphs hidden until a model prediction/run is actively completed
 });
