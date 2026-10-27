@@ -67,6 +67,7 @@ def create_llm_model():
                 model=model_name,
                 temperature=0,
                 google_api_key=api_key,
+                request_timeout=30,
             )
 
     # Local fallback
@@ -79,7 +80,7 @@ def create_llm_model():
         model=model_name,
         api_key=api_key,
         temperature=0,
-        timeout=120,
+        timeout=30,
     )
 
 

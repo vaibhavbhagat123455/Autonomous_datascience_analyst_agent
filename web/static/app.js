@@ -252,10 +252,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 overallProgressBar.style.width = `${stepPct}%`;
                 overallPercentage.textContent = `${stepPct}%`;
               }
+            } else if (currentIndex === stepsConfig.length - 1) {
+              // Final agent finished its node update
+              overallProgressBar.style.width = '100%';
+              overallPercentage.textContent = '100%';
+              stageStatusText.textContent = 'Finalizing report artifacts...';
             }
           }
         } else if (data.type === 'complete') {
           activeEventSource.close();
+          stepsConfig.forEach(s => {
+            const stepEl = document.getElementById(`step-${s.id}`);
+            const tagEl = document.getElementById(`tag-${s.id}`);
+            if (stepEl && tagEl) {
+              stepEl.className = 'timeline-step completed';
+              tagEl.textContent = 'COMPLETED';
+            }
+          });
           overallProgressBar.style.width = '100%';
           overallPercentage.textContent = '100%';
           stageStatusText.textContent = 'All agents executed successfully!';
