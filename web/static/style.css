@@ -299,6 +299,7 @@ body.light-theme {
   grid-template-columns: 1.1fr 0.9fr;
   gap: 1.8rem;
   margin-bottom: 2rem;
+  align-items: start;
 }
 
 .card {
@@ -308,6 +309,9 @@ body.light-theme {
   padding: 2rem;
   box-shadow: var(--shadow-md);
   transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .card:hover {
@@ -457,6 +461,8 @@ body.light-theme {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .preview-header {
@@ -480,9 +486,34 @@ body.light-theme {
 
 .table-scroll {
   max-height: 240px;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  display: block;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #94A3B8 #F1F5F9;
+}
+
+/* Custom Visible Scrollbars for Column & Row Scrolling */
+.table-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 4px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
 }
 
 table {
@@ -490,6 +521,7 @@ table {
   min-width: 100%;
   border-collapse: collapse;
   font-size: 0.80rem;
+  table-layout: auto;
 }
 
 th, td {
@@ -510,7 +542,7 @@ th {
 }
 
 td {
-  max-width: 240px;
+  max-width: 220px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
