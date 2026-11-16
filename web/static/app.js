@@ -130,7 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const tr = document.createElement('tr');
             data.columns.forEach(col => {
               const td = document.createElement('td');
-              td.textContent = row[col] !== undefined ? String(row[col]) : '';
+              const cellVal = row[col] !== undefined && row[col] !== null ? String(row[col]) : '';
+              td.textContent = cellVal;
+              td.title = cellVal;
               tr.appendChild(td);
             });
             previewTbody.appendChild(tr);

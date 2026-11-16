@@ -479,20 +479,24 @@ body.light-theme {
 }
 
 .table-scroll {
-  max-height: 180px;
+  max-height: 240px;
+  overflow-x: auto;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: 0.80rem;
 }
 
 th, td {
-  padding: 8px 12px;
+  padding: 8px 14px;
   text-align: left;
   border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
 }
 
 th {
@@ -501,6 +505,15 @@ th {
   color: var(--text-secondary);
   position: sticky;
   top: 0;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+td {
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Form Controls */
