@@ -102,9 +102,15 @@ def train_classification_models(
     )
 
     text_feature_columns = ["__combined_text__"] if text_columns else []
-    categorical_columns = features.select_dtypes(
+    # Only keep low-cardinality categorical columns (e.g. status, gender, priority, etc.)
+    # Exclude high-cardinality identifiers/names/dates with >100 distinct values to prevent 20,000+ sparse column blowup
+    all_cat_cols = features.select_dtypes(
         include=["object", "string", "category", "bool"]
     ).columns.tolist()
+    categorical_columns = [
+        col for col in all_cat_cols
+        if features[col].nunique() <= 100
+    ]
     numeric_columns = features.select_dtypes(include="number").columns.tolist()
 
     transformers = []
@@ -117,8 +123,8 @@ def train_classification_models(
                     lowercase=True,
                     strip_accents="unicode",
                     ngram_range=(1, 2),
-                    min_df=1,
-                    max_features=20_000,
+                    min_df=2,
+                    max_features=10_000,
                 ),
                 "__combined_text__",
             )
@@ -130,7 +136,7 @@ def train_classification_models(
         transformers.append(
             (
                 "categorical",
-                OneHotEncoder(handle_unknown="ignore"),
+                OneHotEncoder(handle_unknown="ignore", sparse_output=True),
                 categorical_columns,
             )
         )
@@ -160,13 +166,15 @@ def train_classification_models(
 
     model_candidates = {
         "logistic_regression": LogisticRegression(
-            max_iter=1_000,
+            max_iter=500,
             class_weight="balanced",
             random_state=42,
+            n_jobs=-1,
         ),
         "linear_svm": LinearSVC(
             class_weight="balanced",
             random_state=42,
+            max_iter=1_000,
         ),
     }
 
